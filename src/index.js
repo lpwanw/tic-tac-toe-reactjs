@@ -121,6 +121,11 @@ class Game extends React.Component {
           <div>{status}</div>
           <ol>{moves}</ol>
         </div>
+        <div className="game-menu">
+          <button className="start-game" >
+              Trọng Quyền
+          </button>
+        </div>
       </div>
     );
   }
