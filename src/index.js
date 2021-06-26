@@ -9,10 +9,6 @@ function Square(props) {
     </button>
   );
 }
-function checkNull(a) {
-  if (a == null) return true;
-  return false;
-}
 class Board extends React.Component {
   renderSquare(i) {
     return (
@@ -91,6 +87,17 @@ class Game extends React.Component {
       xIsNext: step % 2 === 0,
     });
   }
+  replay(){
+    this.setState({
+      history: [
+        {
+          squares: Array(9).fill(null),
+        },
+      ],
+      stepNumber: 0,
+      xIsNext: true,
+    });
+  }
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
@@ -122,8 +129,8 @@ class Game extends React.Component {
           <ol>{moves}</ol>
         </div>
         <div className="game-menu">
-          <button className="start-game" >
-              Trọng Quyền
+          <button className="start-game" onClick={() => this.replay()}>
+              Replay
           </button>
         </div>
       </div>
