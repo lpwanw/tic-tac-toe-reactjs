@@ -63,13 +63,13 @@ class Game extends React.Component {
       return;
     }
     squares[i] = this.state.xIsNext ? "X" : "O";
+    if (calculateWinner(squares)==null)
     if (squares.filter((e) => e == null).length > 1) {
       var x;
       do {
         x = Math.floor(Math.random() * 9);
       } while (squares[x]);
       squares[x] = !this.state.xIsNext ? "X" : "O";
-    } else {
     }
     this.setState({
       history: history.concat([
