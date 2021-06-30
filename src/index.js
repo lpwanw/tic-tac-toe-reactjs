@@ -134,6 +134,9 @@ class Game extends React.Component {
 }
 ReactDOM.render(<Game />, document.getElementById("root"));
 function botMove(squares) {
+  if (squares.indexOf(null) === -1) {
+    return;
+  }
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -181,20 +184,37 @@ function botMove(squares) {
   }
   var level = 0;
   while (level <= 3) {
+    var list = [];
     for (let i = 0; i < prefer.length; i++) {
       if (prefer[i] === level) {
-        var index = lines[i]
+        list.push(lines[i]);
+        // var index = lines[i]
+        //   .map(function (value) {
+        //     console.log(value);
+        //     return squares[value] === null;
+        //   })
+        //   .indexOf(true);
+        // if (index !== -1) {
+        //   return lines[i][index];
+        // }
+      }
+    }
+    if (list.length === 0) {
+      level++;
+    } else {
+      var index;
+      var item;
+      do {
+        item = list[Math.floor(Math.random() * list.length)];
+        index = item
           .map(function (value) {
             console.log(value);
             return squares[value] === null;
           })
           .indexOf(true);
-        if (index !== -1) {
-          return lines[i][index];
-        }
-      }
+      } while (index === -1);
+      return item[index];
     }
-    level++;
   }
 }
 function calculateWinner(squares) {
