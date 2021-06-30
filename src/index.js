@@ -63,14 +63,9 @@ class Game extends React.Component {
       return;
     }
     squares[i] = this.state.xIsNext ? "X" : "O";
-    if (calculateWinner(squares)==null)
-    if (squares.filter((e) => e == null).length > 1) {
-      var x;
-      do {
-        x = Math.floor(Math.random() * 9);
-      } while (squares[x]);
-      squares[x] = !this.state.xIsNext ? "X" : "O";
-    }
+    if (calculateWinner(squares) == null)
+      squares[botMove(squares)] = !this.state.xIsNext ? "X" : "O";
+
     this.setState({
       history: history.concat([
         {
@@ -87,7 +82,7 @@ class Game extends React.Component {
       xIsNext: step % 2 === 0,
     });
   }
-  replay(){
+  replay() {
     this.setState({
       history: [
         {
@@ -130,7 +125,7 @@ class Game extends React.Component {
         </div>
         <div className="game-menu">
           <button className="start-game" onClick={() => this.replay()}>
-              Replay
+            Replay
           </button>
         </div>
       </div>
@@ -138,7 +133,70 @@ class Game extends React.Component {
   }
 }
 ReactDOM.render(<Game />, document.getElementById("root"));
-
+function botMove(squares) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+  let prefer = [];
+  for (let i = 0; i < lines.length; i++) {
+    if (squares[4] === null) {
+      return 4;
+    } else {
+      const [a, b, c] = lines[i];
+      if (
+        squares[a] === squares[b] ||
+        squares[a] === squares[c] ||
+        squares[b] === squares[c]
+      ) {
+        // 2 Xs  2  Os  2 nulls
+        var count = 0;
+        if (squares[a] !== null) count++;
+        if (squares[b] !== null) count++;
+        if (squares[c] !== null) count++;
+        if (count === 2) {
+          var char = squares[a]
+            ? squares[a]
+            : squares[b]
+            ? squares[b]
+            : squares[c];
+          if (char === "O") {
+            prefer.push(0);
+          } else if (char === "X") {
+            prefer.push(1);
+          }
+        } else {
+          prefer.push(2);
+        }
+      } else {
+        prefer.push(3);
+      }
+    }
+  }
+  var level = 0;
+  while (level <= 3) {
+    for (let i = 0; i < prefer.length; i++) {
+      if (prefer[i] === level) {
+        var index = lines[i]
+          .map(function (value) {
+            console.log(value);
+            return squares[value] === null;
+          })
+          .indexOf(true);
+        if (index !== -1) {
+          return lines[i][index];
+        }
+      }
+    }
+    level++;
+  }
+}
 function calculateWinner(squares) {
   const lines = [
     [0, 1, 2],
